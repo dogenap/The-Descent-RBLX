@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saturn Productions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <div class="title" id="game-title">Saturn Productions</div>
+    <br />
+    <div class="container">
+      <div class="chat-box" id="left">
+        <h1>The Descent</h1>
+        <h2>Patch Notes</h2>
+        <li><a href="./releases/v1/v1st-.html">v1</a></li>
+        <li><a href="./releases/v1.1/v1.1st-.html">v1.1</a></li>
+        <p>Coming soon.</p>
+        <hr color="#9b6900" />
+        <h1>Soundtrack</h1>
+        <li><a href="./s/v1/main.html">Volume I</a></li>
+        <li><a href="./s/v2/main.html">Volume II</a></li>
+      </div>
+      <!--<div class="chat-box" id="right">
+        <h1>Soundtrack</h1>
+        <li><a href="./s/v1/main.html">Volume I</a></li>
+        <li><a href="./s/v2/main.html">Volume II</a></li>
+      </div>-->
+    </div>
+    <script>
+      // Trigger the animations after the page loads
+      window.addEventListener("load", () => {
+        document.getElementById("game-title").style.opacity = "1";
+        document.getElementById("left").classList.add("active");
+        document.getElementById("right").classList.add("active");
+      });
+    </script>
+  </body>
+</html>

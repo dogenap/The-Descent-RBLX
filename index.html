@@ -1,40 +1,89 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Saturn Productions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet" />
-    <link href="style.css" rel="stylesheet"/>
-  </head>
-  <body>
-    <div class="title" id="game-title">Saturn Productions</div>
-    <br />
-    <div class="container">
-      <div class="chat-box" id="left">
-        <h1>The Descent</h1>
-        <h2>Patch Notes</h2>
-        <li><a href="./releases/v1/v1st-.html">v1</a></li>
-        <li><a href="./releases/v1.1/v1.1st-.html">v1.1</a></li>
-        <p>Coming soon.</p>
-        <hr color="#9b6900" />
-        <h1>Soundtrack</h1>
-        <li><a href="./s/v1/main.html">Volume I</a></li>
-        <li><a href="./s/v2/main.html">Volume II</a></li>
-      </div>
-      <!--<div class="chat-box" id="right">
-        <h1>Soundtrack</h1>
-        <li><a href="./s/v1/main.html">Volume I</a></li>
-        <li><a href="./s/v2/main.html">Volume II</a></li>
-      </div>-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - We'll Be Back Soon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        a:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 1rem;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="icon">🌐</div>
+    <h1>We're Offline</h1>
+    <p>Oops! It looks like our website is currently unavailable. We're working hard to fix this issue. Please check back soon!</p>
+    <div class="button-container">
+        <a href="javascript:location.reload()">Try Again</a>
+        <a href="mailto:luminsstudio@gmail.com">Contact Support</a>
     </div>
-    <script>
-      // Trigger the animations after the page loads
-      window.addEventListener("load", () => {
-        document.getElementById("game-title").style.opacity = "1";
-        document.getElementById("left").classList.add("active");
-        document.getElementById("right").classList.add("active");
-      });
-    </script>
-  </body>
+    <footer>
+        &copy; 2024 Your Website Name. All rights reserved.
+    </footer>
+</body>
 </html>
