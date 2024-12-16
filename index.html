@@ -88,20 +88,10 @@
     </footer>
 
     <script>
-        // Redirects to noyet.html when 0894 is typed in the console
-        const secretCode = "894";
-        let input = "";
 
-        document.addEventListener("keydown", (event) => {
-            input += event.key;
-
-            // Keep only the last 4 characters in input
-            input = input.slice(-secretCode.length);
-
-            if (input === secretCode) {
+        function run() {
                 window.location.href = "noyet.html";
-            }
-        });
+        }
     </script>
 </body>
 </html>
