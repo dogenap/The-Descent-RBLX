@@ -1,34 +1,114 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Saturn Productions</title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Outfit"
-      rel="stylesheet"
-    />
-  </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Song Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Outfit", sans-serif;
+      background: radial-gradient(circle at center, #121212, #0d0d0d);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow: hidden;
+    }
 
-  <body>
-    <div class="chat-box" id="left">
-        <h1>Song List</h1>
-        <button onclick="play(one)">Office Theme</button>
-        <button onclick="play(two)">Chase 1</button>
-        <button onclick="play(three)">Blue's Theme</button>
-      </div>
-  </body>
+    .title {
+      font-size: 4.5rem;
+      font-weight: 600;
+      text-align: center;
+      background: linear-gradient(90deg, #f39c12, #ff5733);
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 15px rgba(255, 87, 51, 0.5), 0 0 30px rgba(243, 156, 18, 0.8);
+      margin-bottom: 20px;
+    }
+
+    .song-list {
+      width: 100%;
+      max-width: 900px;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 87, 51, 0.1);
+    }
+
+    .song-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      border-bottom: 1px solid #333;
+      transition: background-color 0.3s ease;
+    }
+
+    .song-item:last-child {
+      border-bottom: none;
+    }
+
+    .song-item:hover {
+      background-color: #333;
+    }
+
+    .song-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #f39c12;
+    }
+
+    .song-name:hover {
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .song-duration {
+      font-size: 0.9rem;
+      color: #a0a0a0;
+    }
+  </style>
+</head>
+<body>
+  <div class="title">Song Library</div>
+  <input type="text" id="searchBar" placeholder="Search songs..." style="margin-bottom: 20px; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #333; background-color: #1e1e1e; color: #fff;">
+  <div class="song-list" id="songList">
+    <!-- Songs will be dynamically populated here -->
+  </div>
 
   <script>
-    function play(one, two, three) {
-        if (one) {
-            window.location.href = "./Gahhh.mp3"
-        } else if (two) {
-            window.location.href = "./one step from becoming a shadow yourself.mp3"
-        } else if (three) {
-            window.location.href = "./Overwhelming Paranoia.mp3"
-        }
+    // Example list of songs; in a real application, this data would be fetched from a server
+    const songs = [
+      { name: "Blue Shadow Counterpart", duration: "3:45" },
+      { name: "nuhuh", duration: "4:05" },
+    ];
+
+    const songList = document.getElementById("songList");
+
+    songs.forEach(song => {
+      const songItem = document.createElement("div");
+      songItem.className = "song-item";
+
+      const songName = document.createElement("span");
+      songName.className = "song-name";
+      songName.textContent = song.name;
+
+      const songDuration = document.createElement("span");
+      songDuration.className = "song-duration";
+      songDuration.textContent = song.duration;
+
+      songItem.appendChild(songName);
+      songItem.appendChild(songDuration);
+      songList.appendChild(songItem);
+    });
+
+    if (song === "BlueShadow") {
+      e
     }
   </script>
+  <script src="script.js"></script>
+</body>
 </html>
