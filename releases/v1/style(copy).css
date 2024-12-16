@@ -1,0 +1,33 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: linear-gradient(0deg, #1a4746 0%, #4a8596 100%);
+  font-family: 'Outfit';
+  font-size: 22px;
+}
+
+.button {
+  background: linear-gradient(0deg, #68e3e1 0%, #5cdcff 100%);
+  font-family: 'Outfit';
+  font-size: 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.button:hover {
+  background: #00c8ff;
+  color: #f8f8f8;
+}
+
+.chat-box {
+  border: 2px solid #000000;
+  padding: 10px;
+  max-width: 650px;
+  margin: 40px auto 0 auto;
+  border-radius: 10px;
+  background-color: rgb(153, 214, 233);
+}
