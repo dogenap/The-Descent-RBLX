@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Offline - We'll Be Back Soon</title>
     <style>
+        /* Existing styles */
         * {
             margin: 0;
             padding: 0;
@@ -85,5 +86,22 @@
     <footer>
         &copy; 2024 Saturn Productions. All rights reserved.
     </footer>
+
+    <script>
+        // Redirects to noyet.html when 0894 is typed in the console
+        const secretCode = "0894";
+        let input = "";
+
+        document.addEventListener("keydown", (event) => {
+            input += event.key;
+
+            // Keep only the last 4 characters in input
+            input = input.slice(-secretCode.length);
+
+            if (input === secretCode) {
+                window.location.href = "noyet.html";
+            }
+        });
+    </script>
 </body>
 </html>
