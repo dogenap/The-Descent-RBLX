@@ -4,13 +4,13 @@ html {
 }
 
 body {
-  background: linear-gradient(0deg, #510061 0%, #a83bc4 100%);
+  background: linear-gradient(0deg, #265d7e 0%, #8798bd 100%);
   font-family: 'Outfit';
   font-size: 22px;
 }
 
 .button {
-  background: linear-gradient(0deg, #a768e3 0%, #c35cff 100%);
+  background: linear-gradient(0deg, #062a6e 0%, #2f6f83 100%);
   font-family: 'Outfit';
   font-size: 22px;
   border-radius: 10px;
@@ -19,7 +19,7 @@ body {
 }
 
 .button:hover {
-  background: #ae00ff;
+  background: #4400ff;
   color: #f8f8f8;
 }
 
@@ -29,5 +29,5 @@ body {
   max-width: 650px;
   margin: 40px auto 0 auto;
   border-radius: 10px;
-  background-color: rgb(210, 161, 219);
+  background-color: rgb(171, 195, 214);
 }
