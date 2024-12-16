@@ -23,3 +23,7 @@ html {
     outline: none;
     outline-color: transparent;
   }
+
+#left {
+  transform: translateX(-50px);
+}
