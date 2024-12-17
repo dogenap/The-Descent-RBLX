@@ -4,16 +4,30 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Version 1</title>
-    <link href="style(copy).css" rel="stylesheet" type="text/css" />
+    <link href="../style(copy).css" rel="stylesheet" type="text/css" />
     <link rel="icon" href="../LOGO.png" type="image/x-icon">
+
+    <style>
+      /* Ensure the chat box is hidden initially */
+      .chat-box {
+        visibility: hidden; /* Use visibility instead of display */
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s; /* Smooth fade-in effect with delayed visibility change */
+      }
+
+      /* When 'active' class is added, show and animate the chat box */
+      .chat-box.active {
+        visibility: visible; /* Show the chat box */
+        display: block;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out; /* Smooth fade-in effect */
+      }
+    </style>
   </head>
   <body>
     <div class="title">Release v1</div>
-    <!-- Add a button to trigger the visibility of the chat-box -->
-    <button class="show-chat-btn" onclick="activateChatBox()">Show Update</button>
-    
+    <br />
     <div class="chat-box">
-      <h1>Release v1</h1>
       <h2>May 8th, 2025</h2>
       <hr />
       <p>Today marks the release of the Descent</p>
@@ -23,16 +37,14 @@
 
     <script>
       // JavaScript function to add 'active' class and trigger the animation
-      function activateChatBox() {
+      window.onload = function() {
         const chatBox = document.querySelector('.chat-box');
-        const button = document.querySelector('.show-chat-btn');
         
-        // Show the chat box
-        chatBox.classList.add('active');
-        
-        // Hide the button
-        button.style.display = 'none';
-      }
+        // Delay the activation of the chat box by 2250ms
+        setTimeout(function() {
+          chatBox.classList.add('active'); // Add 'active' class to show the chat box
+        }, 2250);
+      };
     </script>
   </body>
 </html>

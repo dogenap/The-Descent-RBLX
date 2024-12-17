@@ -20,7 +20,6 @@ body {
   color: transparent;
   text-shadow: 0 0 15px rgba(255, 87, 51, 0.5), 0 0 30px rgba(243, 156, 18, 0.8);
   animation: bounceIn 1.5s ease forwards;
-  opacity: 0;
 }
 
 @keyframes bounceIn {
