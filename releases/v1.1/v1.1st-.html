@@ -1,25 +1,36 @@
+
 <!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Version 1.1</title>
+    <title>Version 1</title>
     <link href="style(copy).css" rel="stylesheet" type="text/css" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Outfit"
-      rel="stylesheet"
-    />
   </head>
-
   <body>
-    <nav>
-      
-    </nav>
+    <div class="title">Release v1</div>
+    <!-- Add a button to trigger the visibility of the chat-box -->
+    <button class="show-chat-btn" onclick="activateChatBox()">Show Update</button>
+    
     <div class="chat-box">
       <h1>Release v1.1</h1>
       <h2>July 26th, 2025</h2>
-      <hr color="" />
+      <hr />
       <p>Bug Fixes</p>
     </div>
+
+    <script>
+      // JavaScript function to add 'active' class and trigger the animation
+      function activateChatBox() {
+        const chatBox = document.querySelector('.chat-box');
+        const button = document.querySelector('.show-chat-btn');
+        
+        // Show the chat box
+        chatBox.classList.add('active');
+        
+        // Hide the button
+        button.style.display = 'none';
+      }
+    </script>
   </body>
 </html>
