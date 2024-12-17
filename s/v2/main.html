@@ -119,7 +119,7 @@
       background: linear-gradient(90deg, #ff5733, #f39c12);
     }
   </style>
-  <link rel="icon" href=".../LOGO.png" type="image/x-icon">
+  <link rel="icon" href="../lg.png" type="image/x-icon">
 </head>
 <body>
   <div class="title">The Descent OST</div>
@@ -130,24 +130,13 @@
     const art2 = "Saturn"
 
     const songs = [
-      { 
-        name: "Darkness Everywhere", 
-        duration: "3:45", 
-        src: "./Darkness everywhere.mp3",
-        cover: "./Vol1Logo.png" // Add your custom cover image here
-      },
-      { 
-        name: "Gahhhh", 
-        duration: "4:05", 
-        src: "./Gahhhh.mp3",
-        cover: "./Vol1Logo.png" // Add your custom cover image here
-      },
-      { 
-        name: "Boss Fight", 
-        duration: "4:05", 
-        src: "./ThisStupidSong_Full.mp3",
-        cover: "./Vol1Logo.png" // Add your custom cover image here
-      },
+      // TEMPLATE
+    // { 
+    //     name: "Darkness Everywhere", 
+    //     duration: "3:45", 
+    //     src: "./Darkness everywhere.mp3",
+    //     cover: "./Vol1Logo.png" // Add your custom cover image here
+    //   },
     ];
 
     const songList = document.getElementById("songList");
@@ -156,7 +145,7 @@
     playerSection.className = "player-section";
 
     const songCover = document.createElement("img");
-    songCover.src = ""; // Default image placeholder
+    songCover.src = "../NA.png"; // Default image placeholder
     playerSection.appendChild(songCover);
 
     const currentSongLabel = document.createElement("div");
