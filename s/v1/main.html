@@ -70,25 +70,148 @@
       font-size: 0.9rem;
       color: #a0a0a0;
     }
+
+    /* Player Section Styling */
+    .player-section {
+      position: absolute;
+      left: 20px;
+      bottom: 20px; /* Adjust position */
+      padding: 20px;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .player-section img {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      object-fit: cover;
+    }
+
+    /* Button styling */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .player-section button {
+      background: linear-gradient(90deg, #f39c12, #ff5733);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px; /* Reduced size */
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .player-section button:hover {
+      background: linear-gradient(90deg, #ff5733, #f39c12);
+    }
   </style>
 </head>
 <body>
   <div class="title">Song Library</div>
-  <input type="text" id="searchBar" placeholder="Search songs..." style="margin-bottom: 20px; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #333; background-color: #1e1e1e; color: #fff;">
-  <div class="song-list" id="songList">
-    <!-- Songs will be dynamically populated here -->
-  </div>
+  <div class="song-list" id="songList"></div>
 
   <script>
-    // Example list of songs; in a real application, this data would be fetched from a server
     const songs = [
-      { name: "Blue Shadow Counterpart", duration: "3:45" },
-      { name: "nuhuh", duration: "4:05" },
+      { 
+        name: "Darkness Everywhere", 
+        duration: "3:45", 
+        src: "./Darkness everywhere.mp3",
+        cover: "./vol1.png" // Add your custom cover image here
+      },
+      { 
+        name: "Gahhhh", 
+        duration: "4:05", 
+        src: "./Gahhhh.mp3",
+        cover: "./vol1.png" // Add your custom cover image here
+      },
     ];
 
     const songList = document.getElementById("songList");
 
-    songs.forEach(song => {
+    const playerSection = document.createElement("div");
+    playerSection.className = "player-section";
+
+    const songCover = document.createElement("img");
+    songCover.src = ""; // Default image placeholder
+    playerSection.appendChild(songCover);
+
+    const currentSongLabel = document.createElement("div");
+    currentSongLabel.textContent = "Now Playing: None";
+    playerSection.appendChild(currentSongLabel);
+
+    const buttonContainer = document.createElement("div");
+    buttonContainer.className = "button-container";
+
+    const playPauseButton = document.createElement("button");
+    playPauseButton.textContent = "Play";
+    buttonContainer.appendChild(playPauseButton);
+
+    const skipButton = document.createElement("button");
+    skipButton.textContent = "Skip";
+    buttonContainer.appendChild(skipButton);
+
+    const loopButton = document.createElement("button");
+    loopButton.textContent = "Loop";
+    buttonContainer.appendChild(loopButton);
+
+    playerSection.appendChild(buttonContainer);
+    document.body.appendChild(playerSection);
+
+    const audioPlayer = new Audio();
+    let currentSongIndex = -1;
+    let isLooping = false;
+
+    playPauseButton.addEventListener("click", () => {
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        playPauseButton.textContent = "Pause";
+      } else {
+        audioPlayer.pause();
+        playPauseButton.textContent = "Play";
+      }
+    });
+
+    skipButton.addEventListener("click", () => {
+      playNextSong();
+    });
+
+    loopButton.addEventListener("click", () => {
+      isLooping = !isLooping;
+      loopButton.textContent = isLooping ? "Looping" : "Loop";
+      audioPlayer.loop = isLooping;
+    });
+
+    function playSong(index) {
+      currentSongIndex = index;
+      const song = songs[index];
+      audioPlayer.src = song.src;
+      audioPlayer.play();
+      currentSongLabel.textContent = `Now Playing: ${song.name}`;
+      playPauseButton.textContent = "Pause";
+
+      // Set the album cover image manually
+      songCover.src = song.cover;
+    }
+
+    function playNextSong() {
+      const nextIndex = (currentSongIndex + 1) % songs.length;
+      playSong(nextIndex);
+    }
+
+    songs.forEach((song, index) => {
       const songItem = document.createElement("div");
       songItem.className = "song-item";
 
@@ -103,12 +226,11 @@
       songItem.appendChild(songName);
       songItem.appendChild(songDuration);
       songList.appendChild(songItem);
-    });
 
-    if (song === "BlueShadow") {
-      e
-    }
+      songName.addEventListener("click", () => {
+        playSong(index);
+      });
+    });
   </script>
-  <script src="script.js"></script>
 </body>
 </html>
