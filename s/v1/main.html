@@ -71,11 +71,10 @@
       color: #a0a0a0;
     }
 
-    /* Player Section Styling */
     .player-section {
       position: absolute;
       left: 20px;
-      bottom: 20px; /* Adjust position */
+      bottom: 20px;
       padding: 20px;
       background-color: #1e1e1e;
       border-radius: 10px;
@@ -94,19 +93,18 @@
       object-fit: cover;
     }
 
-    /* Button styling */
     .button-container {
       display: flex;
       justify-content: center;
       gap: 10px;
-      display: none; /* Initially hidden */
+      display: none;
     }
 
     .player-section button {
       background: linear-gradient(90deg, #ce12f3, #f833ff);
       color: #ffffff;
       border: none;
-      padding: 8px 16px; /* Reduced size */
+      padding: 8px 16px;
       font-size: 0.9rem;
       font-weight: 600;
       margin: 5px;
@@ -118,45 +116,45 @@
     .player-section button:hover {
       background: linear-gradient(90deg, #c533ff, #ac12f3);
     }
+
+    /* Volume Slider */
+    .volume-container {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .volume-container input[type="range"] {
+      width: 100px;
+    }
+
+    .volume-label {
+      font-size: 0.9rem;
+      color: #ffffff;
+    }
   </style>
-  <link rel="icon" href="../lg.png" type="image/x-icon">
 </head>
 <body>
   <div class="title">The Descent OST</div>
   <div class="song-list" id="songList"></div>
 
   <script>
-    const art1 = "H8"
-    const art2 = "Saturn"
-
+    const art1 = "H8";
     const songs = [
-      { 
-        name: "Darkness Everywhere", 
-        duration: "3:45", 
-        src: "./Darkness everywhere.mp3",
-        cover: "./Vol1Logo.png" // Add your custom cover image here
-      },
-      { 
-        name: "Gahhhh", 
-        duration: "4:05", 
-        src: "./Gahhhh.mp3",
-        cover: "./Vol1Logo.png" // Add your custom cover image here
-      },
-      { 
-        name: "Boss Fight", 
-        duration: "4:05", 
-        src: "./ThisStupidSong_Full.mp3",
-        cover: "./Vol1Logo.png" // Add your custom cover image here
-      },
+      { name: "Darkness Everywhere", duration: "3:45", src: "./Darkness everywhere.mp3", cover: "./Vol1Logo.png" },
+      { name: "Gahhhh", duration: "4:05", src: "./Gahhhh.mp3", cover: "./Vol1Logo.png" },
+      { name: "Boss Fight", duration: "4:05", src: "./ThisStupidSong_Full.mp3", cover: "./Vol1Logo.png" },
     ];
 
     const songList = document.getElementById("songList");
 
+    // Player UI
     const playerSection = document.createElement("div");
     playerSection.className = "player-section";
 
     const songCover = document.createElement("img");
-    songCover.src = "../NA.png"; // Default image placeholder
+    songCover.src = "../NA.png";
     playerSection.appendChild(songCover);
 
     const currentSongLabel = document.createElement("div");
@@ -179,6 +177,26 @@
     buttonContainer.appendChild(loopButton);
 
     playerSection.appendChild(buttonContainer);
+
+    // Volume slider
+    const volumeContainer = document.createElement("div");
+    volumeContainer.className = "volume-container";
+
+    const volumeLabel = document.createElement("span");
+    volumeLabel.className = "volume-label";
+    volumeLabel.textContent = "Volume:";
+
+    const volumeSlider = document.createElement("input");
+    volumeSlider.type = "range";
+    volumeSlider.min = 0;
+    volumeSlider.max = 1;
+    volumeSlider.step = 0.01;
+    volumeSlider.value = 0.5; // Default volume at 50%
+
+    volumeContainer.appendChild(volumeLabel);
+    volumeContainer.appendChild(volumeSlider);
+    playerSection.appendChild(volumeContainer);
+
     document.body.appendChild(playerSection);
 
     const audioPlayer = new Audio();
@@ -195,14 +213,15 @@
       }
     });
 
-    skipButton.addEventListener("click", () => {
-      playNextSong();
-    });
-
+    skipButton.addEventListener("click", playNextSong);
     loopButton.addEventListener("click", () => {
       isLooping = !isLooping;
       loopButton.textContent = isLooping ? "Looping" : "Loop";
       audioPlayer.loop = isLooping;
+    });
+
+    volumeSlider.addEventListener("input", () => {
+      audioPlayer.volume = volumeSlider.value;
     });
 
     function playSong(index) {
@@ -212,11 +231,7 @@
       audioPlayer.play();
       currentSongLabel.textContent = `Now Playing: ${song.name} (${art1})`;
       playPauseButton.textContent = "Pause";
-
-      // Set the album cover image manually
       songCover.src = song.cover;
-
-      // Show the buttons after a song is selected
       buttonContainer.style.display = "flex";
     }
 
@@ -241,9 +256,7 @@
       songItem.appendChild(songDuration);
       songList.appendChild(songItem);
 
-      songName.addEventListener("click", () => {
-        playSong(index);
-      });
+      songName.addEventListener("click", () => playSong(index));
     });
   </script>
 </body>
