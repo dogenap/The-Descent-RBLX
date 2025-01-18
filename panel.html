@@ -90,65 +90,59 @@
 </head>
 <body>
     <h1 id="headerText">Character Count Checker</h1>
-    <p id="descriptionText">Type text containing the █ character:</p>
-    <input type="text" id="inputText" placeholder="Enter text here...">
+    <p id="descriptionText">Type text to be translated:</p>
+    <div class="container">
+        <input type="text" class="inputText" placeholder="Enter text here...">
+        <input type="text" class="inputText" placeholder="Enter more text...">
+        <input type="text" class="inputText" placeholder="Type something else...">
+    </div>
     <button onclick="checkCharacterCount()">
         <span id="buttonText">Check</span>
     </button>
     <div id="result"></div>
 
-    <select id="languageSelect" onchange="changeLanguage(event)">
-        <option value="en">English</option>
-        <option value="es">Spanish</option>
-        <option value="fr">French</option>
-    </select>
-
     <script>
-        const translations = {
-            en: {
-                headerText: "Character Count Checker",
-                descriptionText: "Type text containing the █ character:",
-                buttonText: "Check",
-                resultFound: 'The sequence "█████" was found.',
-                resultNotFound: "The sequence █████ was not found."
-            },
-            es: {
-                headerText: "Comprobador de Contador de Caracteres",
-                descriptionText: "Escribe texto que contenga el carácter █:",
-                buttonText: "Comprobar",
-                resultFound: 'Se encontró la secuencia "█████".',
-                resultNotFound: "La secuencia █████ no fue encontrada."
-            },
-            fr: {
-                headerText: "Vérificateur de Compte de Caractères",
-                descriptionText: "Tapez du texte contenant le caractère █:",
-                buttonText: "Vérifier",
-                resultFound: 'La séquence "█████" a été trouvée.',
-                resultNotFound: "La séquence █████ n'a pas été trouvée."
-            }
+        const morseCode = {
+            "A": ".-", "B": "-...", "C": "-.-.", "D": "-..", "E": ".", "F": "..-.", "G": "--.", "H": "....", "I": "..", 
+            "J": ".---", "K": "-.-", "L": ".-..", "M": "--", "N": "-.", "O": "---", "P": ".--.", "Q": "--.-", "R": ".-.", 
+            "S": "...", "T": "-", "U": "..-", "V": "...-", "W": ".--", "X": "-..-", "Y": "-.--", "Z": "--..", 
+            "1": ".----", "2": "..---", "3": "...--", "4": "....-", "5": ".....", "6": "-....", "7": "--...", 
+            "8": "---..", "9": "----.", "0": "-----", " ": "/"
         };
 
-        function checkCharacterCount() {
-            const input = document.getElementById('inputText').value;
-            const blockString = "█████"; // The sequence that counts as "hello"
-
-            let resultText;
-            if (input.includes(blockString)) {
-                resultText = translations[document.documentElement.lang].resultFound;
-            } else {
-                resultText = translations[document.documentElement.lang].resultNotFound;
-            }
-
-            document.getElementById('result').innerText = resultText;
+        function textToBase64(text) {
+            return btoa(text);
         }
 
-        function changeLanguage(event) {
-            const lang = event.target.value;
-            document.documentElement.lang = lang;
+        function base64ToMorse(base64Text) {
+            return base64Text.split('').map(char => morseCode[char.toUpperCase()] || char).join(' ');
+        }
 
-            document.getElementById('headerText').innerText = translations[lang].headerText;
-            document.getElementById('descriptionText').innerText = translations[lang].descriptionText;
-            document.getElementById('buttonText').innerText = translations[lang].buttonText;
+        function morseToText(morseCodeText) {
+            const morseToChar = Object.fromEntries(Object.entries(morseCode).map(([k, v]) => [v, k]));
+            return morseCodeText.split(' ').map(code => morseToChar[code] || code).join('');
+        }
+
+        function checkCharacterCount() {
+            const inputs = document.querySelectorAll('.inputText');
+            let allInputs = '';
+
+            // Concatenate all input values into one string
+            inputs.forEach(input => {
+                allInputs += input.value + ' ';
+            });
+
+            // Step 1: Convert input text to Base64
+            const base64Text = textToBase64(allInputs);
+
+            // Step 2: Convert Base64 to Morse Code
+            const morseCodeText = base64ToMorse(base64Text);
+
+            // Step 3: Convert Morse Code back to Text (English)
+            const decodedText = morseToText(morseCodeText);
+
+            // Show final result
+            document.getElementById('result').innerText = `Original Text: ${allInputs}\nBase64: ${base64Text}\nMorse Code: ${morseCodeText}\nDecoded Text: ${decodedText}`;
         }
     </script>
 </body>
