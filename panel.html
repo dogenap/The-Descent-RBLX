@@ -89,25 +89,66 @@
     </style>
 </head>
 <body>
-    <h1>Character Count Checker</h1>
-    <p>Type text containing the █ character:</p>
+    <h1 id="headerText">Character Count Checker</h1>
+    <p id="descriptionText">Type text containing the █ character:</p>
     <input type="text" id="inputText" placeholder="Enter text here...">
-    <button onclick="checkCharacterCount()">Check</button>
+    <button onclick="checkCharacterCount()">
+        <span id="buttonText">Check</span>
+    </button>
     <div id="result"></div>
 
+    <select id="languageSelect" onchange="changeLanguage(event)">
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+    </select>
+
     <script>
+        const translations = {
+            en: {
+                headerText: "Character Count Checker",
+                descriptionText: "Type text containing the █ character:",
+                buttonText: "Check",
+                resultFound: 'The sequence "█████" was found.',
+                resultNotFound: "The sequence █████ was not found."
+            },
+            es: {
+                headerText: "Comprobador de Contador de Caracteres",
+                descriptionText: "Escribe texto que contenga el carácter █:",
+                buttonText: "Comprobar",
+                resultFound: 'Se encontró la secuencia "█████".',
+                resultNotFound: "La secuencia █████ no fue encontrada."
+            },
+            fr: {
+                headerText: "Vérificateur de Compte de Caractères",
+                descriptionText: "Tapez du texte contenant le caractère █:",
+                buttonText: "Vérifier",
+                resultFound: 'La séquence "█████" a été trouvée.',
+                resultNotFound: "La séquence █████ n'a pas été trouvée."
+            }
+        };
+
         function checkCharacterCount() {
             const input = document.getElementById('inputText').value;
             const blockString = "█████"; // The sequence that counts as "hello"
 
             let resultText;
             if (input.includes(blockString)) {
-                resultText = `The input contains the sequence "${blockString}" which means: "hello"`;
+                resultText = translations[document.documentElement.lang].resultFound;
             } else {
-                resultText = "The sequence █████ was not found.";
+                resultText = translations[document.documentElement.lang].resultNotFound;
             }
 
             document.getElementById('result').innerText = resultText;
+        }
+
+        function changeLanguage(event) {
+            const lang = event.target.value;
+            document.documentElement.lang = lang;
+
+            document.getElementById('headerText').innerText = translations[lang].headerText;
+            document.getElementById('descriptionText').innerText = translations[lang].descriptionText;
+            document.getElementById('buttonText').innerText = translations[lang].buttonText;
         }
     </script>
 </body>
