@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>▀</title>
+    <title>Text to Morse to Base64</title>
     <style>
         body {
             margin: 0;
@@ -81,7 +81,6 @@
             gap: 20px;
         }
 
-        /* Button to activate the chat-box */
         .show-chat-btn {
             background: #f39c12;
             padding: 10px 20px;
@@ -129,9 +128,13 @@
             text-align: center;
         }
 
-        .result-item {
-            margin-top: 10px;
+        .output {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #ffffff;
+            text-align: center;
         }
+
     </style>
 </head>
 <body>
@@ -141,6 +144,9 @@
         <input type="text" id="inputText" placeholder="Enter value here...">
         <button onclick="processText()">Process</button>
         <div id="result"></div>
+        <div id="base64Result" class="output"></div>
+        <div id="morseResult" class="output"></div>
+        <div id="englishResult" class="output"></div>
     </div>
 
     <script>
@@ -148,34 +154,45 @@
         async function processText() {
             const inputText = document.getElementById('inputText').value;
             const resultDiv = document.getElementById('result');
+            const base64ResultDiv = document.getElementById('base64Result');
+            const morseResultDiv = document.getElementById('morseResult');
+            const englishResultDiv = document.getElementById('englishResult');
 
-            // Clear previous result
-            resultDiv.innerHTML = '';
+            // Clear previous results
+            resultDiv.innerText = '';
+            base64ResultDiv.innerText = '';
+            morseResultDiv.innerText = '';
+            englishResultDiv.innerText = '';
 
-            // Check if the input contains sequences of ░
-            const match = inputText.match(/^░+$/);
-
-            if (match) {
-                // Calculate the corresponding number for ░ sequences
-                const count = match[0].length;
-                let number = 10 - count; // ░ = 9, ░░ = 8, ░░░ = 7, etc.
-
-                // Convert the number to Base64
+            // Check if the input contains boxes (█) and dots (░)
+            const boxDotMatch = inputText.match(/^█+$/);
+            if (boxDotMatch) {
+                const number = boxDotMatch[0].length; // Count of boxes
                 let base64Encoded = await textToBase64(number.toString());
-
-                // Convert the number to Morse code
                 let morseCode = await textToMorse(number.toString());
 
-                // Display the result separately
-                resultDiv.innerHTML = `
-                    <div class="result-item">Input Text: ${inputText}</div>
-                    <div class="result-item">Number: ${number}</div>
-                    <div class="result-item">Base64: ${base64Encoded}</div>
-                    <div class="result-item">Morse Code: ${morseCode}</div>
-                `;
+                resultDiv.innerText = "Box-Dot input detected!";
+                base64ResultDiv.innerText = "Base64: " + base64Encoded;
+                morseResultDiv.innerText = "Morse Code: " + morseCode;
+            }
+            // Check if the input is a Base64 encoded string
+            else if (inputText.match(/^([A-Za-z0-9+/=]+)$/)) {
+                let englishText = await base64ToEnglish(inputText);
+                let morseCode = await textToMorse(englishText);
+
+                resultDiv.innerText = "Base64 input detected!";
+                englishResultDiv.innerText = "English: " + englishText;
+                morseResultDiv.innerText = "Morse Code: " + morseCode;
+            }
+            // Check if the input is Morse code
+            else if (inputText.match(/^[-.\/ ]+$/)) {
+                let englishText = await morseToEnglish(inputText);
+
+                resultDiv.innerText = "Morse Code input detected!";
+                englishResultDiv.innerText = "English: " + englishText;
             }
             else {
-                resultDiv.innerText = "Invalid ░ sequence!";
+                resultDiv.innerText = "Invalid input!";
             }
         }
 
@@ -187,19 +204,42 @@
             });
         }
 
-        // Convert a string (e.g., "9") to Morse code
+        // Convert Base64 to English
+        function base64ToEnglish(base64Text) {
+            return new Promise((resolve) => {
+                let decoded = atob(base64Text); // Decode from Base64
+                resolve(decoded);
+            });
+        }
+
+        // Convert Morse code to English
+        function morseToEnglish(morseCode) {
+            return new Promise((resolve) => {
+                const morseCodeMap = {
+                    '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F', '--.': 'G', '....': 'H',
+                    '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L', '--': 'M', '-.': 'N', '---': 'O', '.--.': 'P',
+                    '--.-': 'Q', '.-.': 'R', '...': 'S', '-': 'T', '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X',
+                    '-.--': 'Y', '--..': 'Z', '-----': '0', '.----': '1', '..---': '2', '...--': '3', '....-': '4',
+                    '.....': '5', '-....': '6', '--...': '7', '---..': '8', '----.': '9',
+                };
+
+                let englishText = morseCode.split(' ').map(code => morseCodeMap[code] || '/').join('');
+                resolve(englishText);
+            });
+        }
+
+        // Convert text to Morse code
         function textToMorse(text) {
             return new Promise((resolve) => {
                 const morseCodeMap = {
                     'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
                     'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
                     'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
-                    'Y': '-.--', 'Z': '--..',
-                    '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....', '6': '-....',
-                    '7': '--...', '8': '---..', '9': '----.',
+                    'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+                    '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
                 };
 
-                let morseCode = text.split('').map(char => morseCodeMap[char] || '/').join(' ');
+                let morseCode = text.split('').map(char => morseCodeMap[char.toUpperCase()] || '/').join(' ');
                 resolve(morseCode);
             });
         }
