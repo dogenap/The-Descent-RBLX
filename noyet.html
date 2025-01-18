@@ -1,41 +1,172 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Saturn Productions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet" />
-    <link href="style.css" rel="stylesheet"/>
-    <link rel="icon" href="lg.png" type="image/x-icon">
-  </head>
-  <body>
-    <div class="title" id="game-title">Saturn Productions</div>
-    <br />
-    <div class="container">
-      <div class="chat-box" id="left">
-        <h1>The Descent</h1>
-        <h2>Patch Notes</h2>
-        <li><a href="./releases/v1/v1st-.html">v1</a></li>
-        <li><a href="./releases/v1.1/v1.1st-.html">v1.1</a></li>
-        <p>Coming soon.</p>
-        <hr color="#9b6900" />
-        <h2>Soundtrack</h1>
-        <li><a href="./s/v1/main.html">Volume I</a></li>
-        <li><a href="./s/v2/main.html">Volume II</a></li>
-      </div>
-      <!--<div class="chat-box" id="right">
-        <h1>Soundtrack</h1>
-        <li><a href="./s/v1/main.html">Volume I</a></li>
-        <li><a href="./s/v2/main.html">Volume II</a></li>
-      </div>-->
-    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Morse to Base64</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Outfit", sans-serif;
+            background: radial-gradient(circle at center, #121212, #0d0d0d);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 600;
+            text-align: center;
+            background: linear-gradient(90deg, #f39c12, #ff5733);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 87, 51, 0.5), 0 0 30px rgba(243, 156, 18, 0.8);
+            animation: bounceIn 1.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 87, 51, 0.1);
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff5733;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #a0a0a0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="headerText">Text to Morse to Base64</h1>
+    <p id="descriptionText">Type a sentence containing the █ character:</p>
+    <input type="text" id="inputText" placeholder="Enter text here...">
+    <button onclick="processText()">
+        <span id="buttonText">Translate</span>
+    </button>
+    <div id="result"></div>
+
     <script>
-      // Trigger the animations after the page loads
-      window.addEventListener("load", () => {
-        document.getElementById("game-title").style.opacity = "1";
-        document.getElementById("left").classList.add("active");
-        //document.getElementById("right").classList.add("active");
-      });
+        // Mapping of █ sequences to letters
+        const mapping = {
+            1: 'A',  // One █ could represent 'A'
+            2: 'B',  // Two █ could represent 'B'
+            3: 'C',  // Three █ could represent 'C'
+            4: 'D',  // Four █ could represent 'D'
+            5: 'E',  // Five █ could represent 'E'
+            6: 'F',  // Six █ could represent 'F'
+            // Add more mappings as needed
+        };
+
+        // Function to process the input text
+        async function processText() {
+            const inputText = document.getElementById('inputText').value;
+
+            // Step 1: Convert █ sequences to Morse code
+            let morseCode = await textToMorse(inputText);  // Convert to Morse code (1st stage)
+
+            // Step 2: Convert Morse code to Base64
+            let base64Encoded = await morseToBase64(morseCode);  // Convert Morse code to Base64 (2nd stage)
+
+            // Step 3: Show final result (Base64)
+            document.getElementById('result').innerText = `Base64: ${base64Encoded}`;
+        }
+
+        // Function to decode the █ sequences into letters
+        function textToMorse(inputText) {
+            return new Promise((resolve) => {
+                const parts = inputText.split(' ');  // Split based on spaces between █ sequences
+                let decodedString = parts.map(part => {
+                    let count = (part.match(/█/g) || []).length;  // Count the number of █ in the part
+                    return mapping[count] || '?';  // Map the count to a corresponding letter (default '?' if not mapped)
+                }).join('');
+
+                let morse = stringToMorse(decodedString);  // Convert the decoded string to Morse code
+                setTimeout(() => {
+                    resolve(morse);  // Resolve Morse code after a slight delay
+                }, 500);
+            });
+        }
+
+        // Function to convert the decoded string to Morse code
+        function stringToMorse(decodedString) {
+            const morseCodeMap = {
+                'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
+                'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
+                'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+                'Y': '-.--', 'Z': '--..',
+                '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....', '6': '-....',
+                '7': '--...', '8': '---..', '9': '----.',
+                '+': '.-.-.', '/': '-..-.', '=': '-...-', '.': '.-.-.-', ',': '--..--', '?': '..--..', '!': '-.-.--'
+            };
+
+            return decodedString.split('').map(char => {
+                return morseCodeMap[char.toUpperCase()] || ''; // Convert each character in the string to Morse code
+            }).join(' ');
+        }
+
+        // Function to convert Morse code to Base64
+        function morseToBase64(morseCode) {
+            return new Promise((resolve) => {
+                const morseToCharMap = {
+                    '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F', '--.': 'G', '....': 'H',
+                    '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L', '--': 'M', '-.': 'N', '---': 'O', '.--.': 'P',
+                    '--.-': 'Q', '.-.': 'R', '...': 'S', '-': 'T', '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X',
+                    '-.--': 'Y', '--..': 'Z',
+                    '-----': '0', '.----': '1', '..---': '2', '...--': '3', '....-': '4', '.....': '5', '-....': '6',
+                    '--...': '7', '---..': '8', '----.': '9'
+                };
+
+                const morseChars = morseCode.split(' ');  // Split the Morse code by spaces
+                let decodedString = morseChars.map(morse => morseToCharMap[morse] || '?').join('');  // Convert Morse to text
+                setTimeout(() => {
+                    resolve(btoa(decodedString));  // Encode the decoded string to Base64 after a slight delay
+                }, 500);
+            });
+        }
     </script>
-  </body>
+</body>
 </html>
