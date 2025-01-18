@@ -105,18 +105,21 @@
         async function processText() {
             const inputText = document.getElementById('inputText').value;
 
-            // Step 1: Convert █ sequences to Morse code
-            let morseCode = await textToMorse(inputText);  // Convert to Morse code (1st stage)
+            // Step 1: Convert █ sequences to Base64
+            let base64Encoded = await textToBase64(inputText);  // Convert to Base64 (1st stage)
 
-            // Step 2: Convert Morse code to Base64
-            let base64Encoded = await morseToBase64(morseCode);  // Convert Morse code to Base64 (2nd stage)
+            // Step 2: Convert Base64 to Morse code
+            let morseCode = await base64ToMorse(base64Encoded);  // Convert Base64 to Morse (2nd stage)
 
-            // Step 3: Show final result (Base64)
-            document.getElementById('result').innerText = `Base64: ${base64Encoded}`;
+            // Step 3: Convert Morse code to English
+            let englishText = await morseToEnglish(morseCode);  // Convert Morse code to English (3rd stage)
+
+            // Step 4: Show final result (English text)
+            document.getElementById('result').innerText = englishText;
         }
 
-        // Function to decode the █ sequences into letters
-        function textToMorse(inputText) {
+        // Function to decode the █ sequences into Base64
+        function textToBase64(inputText) {
             return new Promise((resolve) => {
                 const parts = inputText.split(' ');  // Split based on spaces between █ sequences
                 let decodedString = parts.map(part => {
@@ -124,14 +127,26 @@
                     return mapping[count] || '?';  // Map the count to a corresponding letter (default '?' if not mapped)
                 }).join('');
 
-                let morse = stringToMorse(decodedString);  // Convert the decoded string to Morse code
+                // Convert the decoded string to Base64
+                let base64Encoded = btoa(decodedString);  // Base64 encoding
                 setTimeout(() => {
-                    resolve(morse);  // Resolve Morse code after a slight delay
+                    resolve(base64Encoded);  // Resolve Base64 after a slight delay
                 }, 500);
             });
         }
 
-        // Function to convert the decoded string to Morse code
+        // Function to convert Base64 to Morse code
+        function base64ToMorse(base64Text) {
+            return new Promise((resolve) => {
+                let decodedString = atob(base64Text);  // Decode Base64 to string
+                let morseCode = stringToMorse(decodedString);  // Convert string to Morse code
+                setTimeout(() => {
+                    resolve(morseCode);  // Resolve Morse code after a slight delay
+                }, 500);
+            });
+        }
+
+        // Function to convert a string into Morse code
         function stringToMorse(decodedString) {
             const morseCodeMap = {
                 'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
@@ -148,8 +163,8 @@
             }).join(' ');
         }
 
-        // Function to convert Morse code to Base64
-        function morseToBase64(morseCode) {
+        // Function to convert Morse code to English
+        function morseToEnglish(morseCode) {
             return new Promise((resolve) => {
                 const morseToCharMap = {
                     '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F', '--.': 'G', '....': 'H',
@@ -161,9 +176,9 @@
                 };
 
                 const morseChars = morseCode.split(' ');  // Split the Morse code by spaces
-                let decodedString = morseChars.map(morse => morseToCharMap[morse] || '?').join('');  // Convert Morse to text
+                let decodedString = morseChars.map(morse => morseToCharMap[morse] || '?').join('');  // Decode Morse to text
                 setTimeout(() => {
-                    resolve(btoa(decodedString));  // Encode the decoded string to Base64 after a slight delay
+                    resolve(decodedString);  // Resolve final decoded string (English text)
                 }, 500);
             });
         }
