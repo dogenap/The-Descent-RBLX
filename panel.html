@@ -144,9 +144,7 @@
         <input type="text" id="inputText" placeholder="Enter value here...">
         <button onclick="processText()">Process</button>
         <div id="result"></div>
-        <div id="base64Result" class="output"></div>
-        <div id="morseResult" class="output"></div>
-        <div id="englishResult" class="output"></div>
+        <div id="codeResult" class="output"></div>
     </div>
 
     <script>
@@ -154,44 +152,37 @@
         async function processText() {
             const inputText = document.getElementById('inputText').value;
             const resultDiv = document.getElementById('result');
-            const base64ResultDiv = document.getElementById('base64Result');
-            const morseResultDiv = document.getElementById('morseResult');
-            const englishResultDiv = document.getElementById('englishResult');
+            const codeResultDiv = document.getElementById('codeResult');
 
             // Clear previous results
             resultDiv.innerText = '';
-            base64ResultDiv.innerText = '';
-            morseResultDiv.innerText = '';
-            englishResultDiv.innerText = '';
+            codeResultDiv.innerText = '';
 
             // Check if the input contains boxes (█) and dots (░)
             if (inputText.includes('█')) {
                 let processedText = processBoxes(inputText);
                 let base64Encoded = await textToBase64(processedText);
-                let morseCode = await textToMorse(processedText);
 
                 resultDiv.innerText = "Box-Dot input detected!";
-                base64ResultDiv.innerText = "Base64: " + base64Encoded;
-                morseResultDiv.innerText = "Morse Code: " + morseCode;
+                codeResultDiv.innerText = base64Encoded;  // Show Base64 output
             }
             // Check if the input is a Base64 encoded string
             else if (inputText.match(/^([A-Za-z0-9+/=]+)$/)) {
-                let englishText = await base64ToEnglish(inputText);
-                let morseCode = await textToMorse(englishText);
+                let morseCode = await base64ToMorse(inputText);
 
                 resultDiv.innerText = "Base64 input detected!";
-                englishResultDiv.innerText = "English: " + englishText;
-                morseResultDiv.innerText = "Morse Code: " + morseCode;
+                codeResultDiv.innerText = morseCode;  // Show Morse code output
             }
             // Check if the input is Morse code
             else if (inputText.match(/^[-.\/ ]+$/)) {
                 let englishText = await morseToEnglish(inputText);
 
                 resultDiv.innerText = "Morse Code input detected!";
-                englishResultDiv.innerText = "English: " + englishText;
+                codeResultDiv.innerText = englishText;  // Show English & Numbers output
             }
             else {
                 resultDiv.innerText = "Invalid input!";
+                codeResultDiv.innerText = '';  // Clear result if invalid input
             }
         }
 
@@ -221,11 +212,12 @@
             });
         }
 
-        // Convert Base64 to English
-        function base64ToEnglish(base64Text) {
+        // Convert Base64 to Morse Code
+        function base64ToMorse(base64Text) {
             return new Promise((resolve) => {
                 let decoded = atob(base64Text); // Decode from Base64
-                resolve(decoded);
+                let morseCode = textToMorse(decoded);  // Convert to Morse code
+                resolve(morseCode);
             });
         }
 
