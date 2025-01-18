@@ -18,7 +18,7 @@
             overflow: hidden;
         }
 
-        h1 {
+        .title {
             font-size: 4.5rem;
             font-weight: 600;
             text-align: center;
@@ -27,7 +27,6 @@
             color: transparent;
             text-shadow: 0 0 15px rgba(255, 87, 51, 0.5), 0 0 30px rgba(243, 156, 18, 0.8);
             animation: bounceIn 1.5s ease forwards;
-            opacity: 0;
         }
 
         @keyframes bounceIn {
@@ -44,8 +43,59 @@
             }
         }
 
+        .chat-box {
+            width: 40%;
+            max-width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 87, 51, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .chat-box.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chat-box h1 {
+            font-size: 2rem;
+            color: #ffcc7a;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .chat-box p {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            width: 90%;
+            max-width: 1200px;
+            gap: 20px;
+        }
+
+        /* Button to activate the chat-box */
+        .show-chat-btn {
+            background: #f39c12;
+            padding: 10px 20px;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
         input[type="text"] {
-            width: 300px;
+            width: 100%;
             padding: 10px;
             font-size: 16px;
             border-radius: 10px;
@@ -81,11 +131,13 @@
     </style>
 </head>
 <body>
-    <h1 id="headerText">Text to Morse to Base64</h1>
-    <p id="descriptionText">Enter your text (█ for Base64, Base64 for Morse, Morse for English):</p>
-    <input type="text" id="inputText" placeholder="Enter text here...">
-    <button onclick="processText()">Translate</button>
-    <div id="result"></div>
+    <div class="title">Text to Morse to Base64</div>
+    <div class="chat-box active">
+        <h1>Enter Your Text:</h1>
+        <input type="text" id="inputText" placeholder="Enter text here...">
+        <button onclick="processText()">Translate</button>
+        <div id="result"></div>
+    </div>
 
     <script>
         // Mapping of █ sequences to letters (for the "█" input to base64 conversion)
@@ -124,6 +176,12 @@
                 // Convert Morse code to English text
                 let englishText = await morseToEnglish(inputText);
                 resultDiv.innerText = englishText;  // Display English text
+            }
+            // Check if the input contains "░" for numerical value
+            else if (inputText.includes('░')) {
+                // Convert "░" into a numerical representation
+                let numericalValue = await handleNumericalValue(inputText);
+                resultDiv.innerText = numericalValue;  // Display the numerical value
             }
             else {
                 resultDiv.innerText = "Invalid input format!";
@@ -183,9 +241,21 @@
                     '--...': '7', '---..': '8', '----.': '9'
                 };
 
-                const morseChars = morseCode.split(' ');  // Split the Morse code by spaces
-                const decodedString = morseChars.map(code => morseToCharMap[code] || '').join('');  // Decode each Morse symbol
-                resolve(decodedString);  // Resolve decoded string after a slight delay
+                let words = morseCode.split('   ');  // Split words by 3 spaces
+                let decodedMessage = words.map(word => {
+                    return word.split(' ').map(code => morseToCharMap[code] || '').join('');  // Convert each word
+                }).join(' ');
+
+                resolve(decodedMessage);  // Resolve the decoded message in English
+            });
+        }
+
+        // Handle numerical value from "░" in input
+        function handleNumericalValue(inputText) {
+            return new Promise((resolve) => {
+                // Extract the numerical value from the input (replace "░" with a number)
+                let numericalValue = inputText.replace(/░/g, '1');  // Replace "░" with '1' as an example (you can modify this logic)
+                resolve(numericalValue);  // Resolve with the modified text
             });
         }
     </script>
