@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Character Count to Text</title>
+    <title>Text Translation</title>
     <style>
         body {
             margin: 0;
@@ -81,50 +81,68 @@
     </style>
 </head>
 <body>
-    <h1 id="headerText">Character Count Checker</h1>
-    <p id="descriptionText">Type text to be translated:</p>
+    <h1 id="headerText">Text Translation</h1>
+    <p id="descriptionText">Type a sentence containing the █ character:</p>
     <input type="text" id="inputText" placeholder="Enter text here...">
-    <button onclick="checkCharacterCount()">
-        <span id="buttonText">Check</span>
+    <button onclick="processText()">
+        <span id="buttonText">Translate</span>
     </button>
     <div id="result"></div>
 
     <script>
-        const morseCode = {
-            "A": ".-", "B": "-...", "C": "-.-.", "D": "-..", "E": ".", "F": "..-.", "G": "--.", "H": "....", "I": "..", 
-            "J": ".---", "K": "-.-", "L": ".-..", "M": "--", "N": "-.", "O": "---", "P": ".--.", "Q": "--.-", "R": ".-.", 
-            "S": "...", "T": "-", "U": "..-", "V": "...-", "W": ".--", "X": "-..-", "Y": "-.--", "Z": "--..", 
-            "1": ".----", "2": "..---", "3": "...--", "4": "....-", "5": ".....", "6": "-....", "7": "--...", 
-            "8": "---..", "9": "----.", "0": "-----", " ": "/"
+        // Predefined pattern to search for
+        const mapping = {
+            1: 'A',  // Single █ could represent 'A'
+            2: 'B',  // Two █ could represent 'B'
+            3: 'C',  // Three █ could represent 'C'
+            4: 'D',  // Four █ could represent 'D'
+            5: 'E',  // Five █ could represent 'E'
+            6: 'F',  // Six █ could represent 'F'
+            // Add more mappings as needed
         };
 
-        function textToBase64(text) {
-            return btoa(text);
-        }
-
-        function base64ToMorse(base64Text) {
-            return base64Text.split('').map(char => morseCode[char.toUpperCase()] || char).join(' ');
-        }
-
-        function morseToText(morseCodeText) {
-            const morseToChar = Object.fromEntries(Object.entries(morseCode).map(([k, v]) => [v, k]));
-            return morseCodeText.split(' ').map(code => morseToChar[code] || code).join('');
-        }
-
-        function checkCharacterCount() {
+        // Function to process the input text
+        function processText() {
             const inputText = document.getElementById('inputText').value;
+            let translatedString = decodeText(inputText);
 
-            // Step 1: Convert input text to Base64
-            const base64Text = textToBase64(inputText);
+            // Step 1: Base64 encoding
+            let base64Encoded = btoa(translatedString);
 
-            // Step 2: Convert Base64 to Morse Code
-            const morseCodeText = base64ToMorse(base64Text);
+            // Step 2: Convert Base64 string to Morse code
+            let morseCode = base64ToMorse(base64Encoded);
 
-            // Step 3: Convert Morse Code back to Text (English)
-            const decodedText = morseToText(morseCodeText);
+            // Step 3: Show the result (Base64 and Morse code)
+            document.getElementById('result').innerText = `Base64: ${base64Encoded}\nMorse Code: ${morseCode}`;
+        }
 
-            // Show final result
-            document.getElementById('result').innerText = `Original Text: ${inputText}\nBase64: ${base64Text}\nMorse Code: ${morseCodeText}\nDecoded Text: ${decodedText}`;
+        // Function to decode the █ sequences into letters
+        function decodeText(inputText) {
+            const parts = inputText.split(' ');  // Split based on spaces between █ sequences
+
+            let decodedString = parts.map(part => {
+                let count = (part.match(/█/g) || []).length;  // Count the number of █ in the part
+                return mapping[count] || '?';  // Map the count to a corresponding letter (default '?' if not mapped)
+            }).join('');
+
+            return decodedString;
+        }
+
+        // Function to convert a Base64 string to Morse code
+        function base64ToMorse(base64String) {
+            const morseCodeMap = {
+                'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
+                'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
+                'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+                'Y': '-.--', 'Z': '--..',
+                '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....', '6': '-....',
+                '7': '--...', '8': '---..', '9': '----.',
+                '+': '.-.-.', '/': '-..-.', '=': '-...-', '.': '.-.-.-', ',': '--..--', '?': '..--..', '!': '-.-.--'
+            };
+
+            return base64String.split('').map(char => {
+                return morseCodeMap[char.toUpperCase()] || ''; // Convert each character in Base64 to Morse code
+            }).join(' ');
         }
     </script>
 </body>
