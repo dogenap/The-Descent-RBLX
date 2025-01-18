@@ -82,15 +82,13 @@
 </head>
 <body>
     <h1 id="headerText">Text to Morse to Base64</h1>
-    <p id="descriptionText">Type a sentence containing the █ character or Base64/Morse code:</p>
+    <p id="descriptionText">Enter your text (█ for Base64, Base64 for Morse, Morse for English):</p>
     <input type="text" id="inputText" placeholder="Enter text here...">
-    <button onclick="processText()">
-        <span id="buttonText">Translate</span>
-    </button>
+    <button onclick="processText()">Translate</button>
     <div id="result"></div>
 
     <script>
-        // Mapping of █ sequences to letters
+        // Mapping of █ sequences to letters (for the "█" input to base64 conversion)
         const mapping = {
             1: 'A',  // One █ could represent 'A'
             2: 'B',  // Two █ could represent 'B'
@@ -104,26 +102,35 @@
         // Function to process the input text
         async function processText() {
             const inputText = document.getElementById('inputText').value;
+            const resultDiv = document.getElementById('result');
 
-            // Check the input type: █, Base64, or Morse code
+            // Clear previous result
+            resultDiv.innerText = '';
+
+            // Check if the input contains "█"
             if (inputText.includes('█')) {
-                // If input contains '█', process it to Base64
+                // Convert █ to Base64
                 let base64Encoded = await textToBase64(inputText);
-                document.getElementById('result').innerText = base64Encoded;  // Display Base64
-            } else if (/^[A-Za-z0-9+/=]+$/.test(inputText)) {
-                // If input looks like Base64 (simple regex match for Base64 chars)
+                resultDiv.innerText = base64Encoded;  // Display Base64
+            }
+            // Check if the input is Base64 (a simple Base64 check)
+            else if (/^[A-Za-z0-9+/=]+$/.test(inputText)) {
+                // Convert Base64 to Morse code
                 let morseCode = await base64ToMorse(inputText);
-                document.getElementById('result').innerText = morseCode;  // Display Morse code
-            } else if (/^[.-\s]+$/.test(inputText)) {
-                // If input is Morse code (check for valid Morse characters)
+                resultDiv.innerText = morseCode;  // Display Morse code
+            }
+            // Check if the input is Morse code (valid Morse code characters)
+            else if (/^[.-\s]+$/.test(inputText)) {
+                // Convert Morse code to English text
                 let englishText = await morseToEnglish(inputText);
-                document.getElementById('result').innerText = englishText;  // Display English text
-            } else {
-                document.getElementById('result').innerText = "Invalid input format!";
+                resultDiv.innerText = englishText;  // Display English text
+            }
+            else {
+                resultDiv.innerText = "Invalid input format!";
             }
         }
 
-        // Function to decode the █ sequences into Base64
+        // Convert █ sequence to Base64
         function textToBase64(inputText) {
             return new Promise((resolve) => {
                 const parts = inputText.split(' ');  // Split based on spaces between █ sequences
@@ -134,24 +141,20 @@
 
                 // Convert the decoded string to Base64
                 let base64Encoded = btoa(decodedString);  // Base64 encoding
-                setTimeout(() => {
-                    resolve(base64Encoded);  // Resolve Base64 after a slight delay
-                }, 500);
+                resolve(base64Encoded);  // Resolve Base64 after processing
             });
         }
 
-        // Function to convert Base64 to Morse code
+        // Convert Base64 to Morse code
         function base64ToMorse(base64Text) {
             return new Promise((resolve) => {
                 let decodedString = atob(base64Text);  // Decode Base64 to string
                 let morseCode = stringToMorse(decodedString);  // Convert string to Morse code
-                setTimeout(() => {
-                    resolve(morseCode);  // Resolve Morse code after a slight delay
-                }, 500);
+                resolve(morseCode);  // Resolve Morse code
             });
         }
 
-        // Function to convert a string into Morse code
+        // Convert string to Morse code
         function stringToMorse(decodedString) {
             const morseCodeMap = {
                 'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
@@ -168,7 +171,7 @@
             }).join(' ');
         }
 
-        // Function to convert Morse code to English
+        // Convert Morse code to English
         function morseToEnglish(morseCode) {
             return new Promise((resolve) => {
                 const morseToCharMap = {
@@ -181,10 +184,8 @@
                 };
 
                 const morseChars = morseCode.split(' ');  // Split the Morse code by spaces
-                let decodedString = morseChars.map(code => morseToCharMap[code] || '').join('');  // Decode each Morse symbol
-                setTimeout(() => {
-                    resolve(decodedString);  // Resolve decoded string after a slight delay
-                }, 500);
+                const decodedString = morseChars.map(code => morseToCharMap[code] || '').join('');  // Decode each Morse symbol
+                resolve(decodedString);  // Resolve decoded string after a slight delay
             });
         }
     </script>
