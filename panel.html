@@ -165,11 +165,10 @@
             englishResultDiv.innerText = '';
 
             // Check if the input contains boxes (█) and dots (░)
-            const boxDotMatch = inputText.match(/^█+$/);
-            if (boxDotMatch) {
-                const number = boxDotMatch[0].length; // Count of boxes
-                let base64Encoded = await textToBase64(number.toString());
-                let morseCode = await textToMorse(number.toString());
+            if (inputText.includes('█')) {
+                let processedText = processBoxes(inputText);
+                let base64Encoded = await textToBase64(processedText);
+                let morseCode = await textToMorse(processedText);
 
                 resultDiv.innerText = "Box-Dot input detected!";
                 base64ResultDiv.innerText = "Base64: " + base64Encoded;
@@ -196,7 +195,25 @@
             }
         }
 
-        // Convert a string (e.g., "9") to Base64
+        // Process the Boxes (█) and Dots (░) into a string for Base64 encoding
+        function processBoxes(inputText) {
+            let result = "";
+            let boxCount = 0;
+            let dotCount = 0;
+
+            for (let char of inputText) {
+                if (char === '█') {
+                    boxCount++;
+                } else if (char === '░') {
+                    dotCount++;
+                }
+            }
+            // Combine box and dot counts to form a string for Base64 encoding
+            result = `${boxCount}:${dotCount}`;
+            return result;
+        }
+
+        // Convert a string (e.g., "9:2") to Base64
         function textToBase64(text) {
             return new Promise((resolve) => {
                 let base64Encoded = btoa(text);  // Base64 encoding
